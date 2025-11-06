@@ -10,7 +10,7 @@ services:
       - ROOT_PASS=borraccia
       - DB_NAME=freescout
       - DB_USER=admin
-      - DB_PASS=borraccia
+      - DB_PASS=password
       - CONTAINER_NAME=freescout-db
     volumes:
       - ./db:/var/lib/mysql
@@ -43,10 +43,10 @@ services:
       - DB_HOST=freescout-db
       - DB_NAME=freescout
       - DB_USER=admin
-      - DB_PASS=borraccia
-      - SITE_URL=http://13.49.175.38:8252
+      - DB_PASS=password
+      - SITE_URL=https://localhost:8252
       - ADMIN_EMAIL=admin@admin.com
-      - ADMIN_PASS=borraccia
+      - ADMIN_PASS=password
       - ADMIN_FIRST_NAME=Admin
       - ADMIN_LAST_NAME=User
       - ENABLE_SSL_PROXY=FALSE
