@@ -72,7 +72,7 @@ services:
       - DB_TYPE=mariadb
       - DB_NAME=freescout
       - DB_USER=admin
-      - DB_PASS=borraccia
+      - DB_PASS=password
       - DB01_BACKUP_INTERVAL=1440
       - DB01_BACKUP_BEGIN=0000
       - DB_CLEANUP_TIME=8640
