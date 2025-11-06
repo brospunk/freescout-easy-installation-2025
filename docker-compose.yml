@@ -7,7 +7,7 @@ services:
     container_name: freescout-db
     restart: unless-stopped
     environment:
-      - ROOT_PASS=borraccia
+      - ROOT_PASS=password
       - DB_NAME=freescout
       - DB_USER=admin
       - DB_PASS=password
@@ -17,7 +17,7 @@ services:
     networks:
       - proxy-tier
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "admin", "-pborraccia"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "admin", "-ppassword"]
       interval: 30s
       timeout: 10s
       retries: 5
