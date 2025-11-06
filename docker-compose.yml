@@ -44,7 +44,7 @@ services:
       - DB_NAME=freescout
       - DB_USER=admin
       - DB_PASS=password
-      - SITE_URL=https://localhost:8252
+      - SITE_URL=http://localhost:8252
       - ADMIN_EMAIL=admin@admin.com
       - ADMIN_PASS=password
       - ADMIN_FIRST_NAME=Admin
