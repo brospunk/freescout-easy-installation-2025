@@ -1,0 +1,86 @@
+version: '3'
+
+services:
+  # Database MariaDB
+  freescout-db:
+    image: tiredofit/mariadb:latest
+    container_name: freescout-db
+    restart: unless-stopped
+    environment:
+      - ROOT_PASS=borraccia
+      - DB_NAME=freescout
+      - DB_USER=admin
+      - DB_PASS=borraccia
+      - CONTAINER_NAME=freescout-db
+    volumes:
+      - ./db:/var/lib/mysql
+    networks:
+      - proxy-tier
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "admin", "-pborraccia"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # FreeScout Application
+  freescout-app:
+    image: tiredofit/freescout:latest
+    container_name: freescout-app
+    restart: unless-stopped
+    depends_on:
+      freescout-db:
+        condition: service_healthy
+    ports:
+      - "8252:80"
+    links:
+      - freescout-db
+    volumes:
+      - ./data:/data
+      - ./modules:/www/html/Modules
+      - ./logs:/www/logs
+    environment:
+      - CONTAINER_NAME=freescout-app
+      - DB_HOST=freescout-db
+      - DB_NAME=freescout
+      - DB_USER=admin
+      - DB_PASS=borraccia
+      - SITE_URL=http://13.49.175.38:8252
+      - ADMIN_EMAIL=admin@admin.com
+      - ADMIN_PASS=borraccia
+      - ADMIN_FIRST_NAME=Admin
+      - ADMIN_LAST_NAME=User
+      - ENABLE_SSL_PROXY=FALSE
+      - DISPLAY_ERRORS=FALSE
+      - TIMEZONE=Europe/Rome
+    networks:
+      - proxy-tier
+
+  # Database Backup
+  freescout-db-backup:
+    image: tiredofit/db-backup:latest
+    container_name: freescout-db-backup
+    restart: unless-stopped
+    depends_on:
+      - freescout-db
+    links:
+      - freescout-db
+    volumes:
+      - ./dbbackup:/backup
+    environment:
+      - CONTAINER_NAME=freescout-db-backup
+      - DB_HOST=freescout-db
+      - DB_TYPE=mariadb
+      - DB_NAME=freescout
+      - DB_USER=admin
+      - DB_PASS=borraccia
+      - DB01_BACKUP_INTERVAL=1440
+      - DB01_BACKUP_BEGIN=0000
+      - DB_CLEANUP_TIME=8640
+      - COMPRESSION=BZ
+      - MD5=TRUE
+    networks:
+      - proxy-tier
+
+networks:
+  proxy-tier:
+    driver: bridge
